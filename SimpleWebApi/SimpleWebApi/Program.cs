@@ -50,7 +50,6 @@ else
     app.UseExceptionHandler("/error");
 }
 
-//app.ConfigureExceptionHandler(app.Logger);
 app.ConfigureCustomExceptionMiddleware();
 
 app.UseStatusCodePages();

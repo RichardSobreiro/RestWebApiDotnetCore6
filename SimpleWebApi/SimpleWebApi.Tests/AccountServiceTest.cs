@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using SimpleWebApi.Domain.Base.Exceptions;
 using SimpleWebApi.Domain.Entities;
 using SimpleWebApi.Domain.Repository;
 using SimpleWebApi.Services.AutoMapper;
@@ -30,7 +31,7 @@ namespace SimpleWebApi.Tests
         [TestMethod]
         public async Task PostAsync_ValidateId_ThrowsException()
         {
-            var exception = await Assert.ThrowsExceptionAsync<Exception>(
+            var exception = await Assert.ThrowsExceptionAsync<FieldValidationException>(
                 () => accountService.PostAsync(new AccountViewModel() { Id = Guid.NewGuid() }));
             Assert.AreEqual("Account identifier must be empty", exception.Message);
         }
@@ -38,7 +39,7 @@ namespace SimpleWebApi.Tests
         [TestMethod]
         public async Task GetByIdAsync_SendingEmptyGuid_ThrowsException()
         {
-            var exception = await Assert.ThrowsExceptionAsync<Exception>(
+            var exception = await Assert.ThrowsExceptionAsync<FieldValidationException>(
                 () => accountService.GetByIdAsync(""));
             Assert.AreEqual("Account identifier is not valid", exception.Message);
         }
@@ -46,7 +47,7 @@ namespace SimpleWebApi.Tests
         [TestMethod]
         public async Task PutAsync_SendingEmptyGuid_ThrowsException()
         {
-            var exception = await Assert.ThrowsExceptionAsync<Exception>(
+            var exception = await Assert.ThrowsExceptionAsync<FieldValidationException>(
                 () => accountService.PutAsync(new AccountViewModel()));
             Assert.AreEqual("Account identifier is invalid", exception.Message);
         }
@@ -54,7 +55,7 @@ namespace SimpleWebApi.Tests
         [TestMethod]
         public async Task DeleteAsync_SendingEmptyGuid_ThrowsException()
         {
-            var exception = await Assert.ThrowsExceptionAsync<Exception>(
+            var exception = await Assert.ThrowsExceptionAsync<FieldValidationException>(
                 () => accountService.DeleteAsync(""));
             Assert.AreEqual("Account identifier is not valid", exception.Message);
         }
