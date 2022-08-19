@@ -104,8 +104,7 @@ pipeline:
 app.ConfigureCustomExceptionMiddleware();
 ```
 
-Now we are ready to through any exceptions in our web api and be and rest assured because 
-all will be treated in custom handler.
+Now we can throw any exceptions in the code with confidence that they will all be handled correctly.
 
 ## REST Web Api Architectural Style with HATEOAS
 
