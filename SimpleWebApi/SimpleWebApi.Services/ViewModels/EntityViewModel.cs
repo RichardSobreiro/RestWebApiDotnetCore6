@@ -1,6 +1,6 @@
 ﻿namespace SimpleWebApi.Services.ViewModels
 {
-    public class EntityViewModel
+    public record EntityViewModel
     {
         public Guid Id { get; set; }
         public DateTime DateCreated { get; set; }

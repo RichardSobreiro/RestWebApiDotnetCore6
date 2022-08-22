@@ -32,6 +32,21 @@ namespace SimpleWebApi.Services.Services
             return _accountsViewModels;
         }
 
+        public async Task<AccountListResponseViewModel> GetAllByPageAsync(int limit, int page, CancellationToken cancellationToken)
+        {
+
+            var accounts = await accountRepository.QueryPaginatedAsync(limit, page, cancellationToken);
+
+            return new AccountListResponseViewModel
+            {
+                CurrentPage = accounts.CurrentPage,
+                TotalPages = accounts.TotalPages,
+                TotalItems = accounts.TotalItems,
+                Items = accounts.Items.Select(
+                    model => mapper.Map<AccountViewModel>(model)).ToList()
+            };
+        }
+
         public async Task<AccountViewModel> PostAsync(AccountViewModel accountViewModel)
         {
             if (accountViewModel.Id != Guid.Empty)

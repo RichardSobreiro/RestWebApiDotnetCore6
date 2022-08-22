@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SimpleWebApi.Data.SQLServer.Context;
 using SimpleWebApi.Domain.Base;
 using SimpleWebApi.Domain.Interfaces;
+using SimpleWebApi.Services.Extensions;
 using System.Linq.Expressions;
 
 namespace SimpleWebApi.Data.SQLServer.Repositories
@@ -351,7 +352,6 @@ namespace SimpleWebApi.Data.SQLServer.Repositories
                 throw;
             }
         }
-
 
         #endregion
         public void Dispose()

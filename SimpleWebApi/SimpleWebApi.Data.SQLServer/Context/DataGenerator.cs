@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleWebApi.Domain.Entities;
+using System.Security.Cryptography;
 
 namespace SimpleWebApi.Data.SQLServer.Context
 {
     public class DataGenerator
     {
+        private static Random random = new Random();
+
         public static void Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new SQLServerContext(
@@ -16,18 +19,23 @@ namespace SimpleWebApi.Data.SQLServer.Context
                 {
                     return;   // Data was already seeded
                 }
-
+                const string chars = "0123456789";
                 context.Accounts.AddRange(
-                    new Account
-                    {
-                        DocumentNumber = "123456789",
-                        AccountType = "FP",
-                        Password = "7c4a8d09ca3762af61e59520943dc26494f8941b",
-                        Id = Guid.Parse("c7dce21b-d207-4869-bf5f-08eb138bb919"),
-                        DateCreated = DateTime.Now,
-                        IsDeleted = false,
-                        DateUpdated = null
-                    });
+                        Enumerable
+                            .Range(1, 100)
+                            .Select(_ => new Account
+                            {
+                                DocumentNumber = new string(Enumerable.Repeat(chars, 9)
+                                    .Select(s => s[random.Next(s.Length)]).ToArray()),
+                                AccountType = "FP",
+                                Password = SHA1.Create().ToString(),
+                                Id = Guid.NewGuid(),
+                                DateCreated = DateTime.Now,
+                                IsDeleted = false,
+                                DateUpdated = null
+                            })
+                            .ToArray()
+                    );
 
                 context.SaveChanges();
             }

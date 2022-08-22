@@ -24,8 +24,4 @@
     <ProjectReference Include="..\SimpleWebApi.IoC\SimpleWebApi.IoC.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Hateoas\" />
-  </ItemGroup>
-
 </Project>

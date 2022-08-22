@@ -2,7 +2,7 @@
 
 namespace SimpleWebApi.Services.ViewModels
 {
-    public class AccountViewModel : EntityViewModel
+    public record AccountViewModel : EntityViewModel
     {
         [Required]
         public string DocumentNumber { get; set; }

@@ -4,6 +4,8 @@ using SimpleWebApi.Extensions;
 using SimpleWebApi.Filters;
 using SimpleWebApi.IoC;
 using SimpleWebApi.Services.AutoMapper;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,14 @@ var builder = WebApplication.CreateBuilder(args);
 //    options.Filters.Add<HttpResponseExceptionFilter>();
 //});
 // Otherwise use the exception handler midleware
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(ops =>
+{
+    ops.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    ops.JsonSerializerOptions.WriteIndented = true;
+    ops.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    ops.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+    ops.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+}); ;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(AutoMapperSetup));

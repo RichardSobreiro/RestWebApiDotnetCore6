@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using SimpleWebApi.Hateoas;
 using SimpleWebApi.Services.Interfaces;
 using SimpleWebApi.Services.ViewModels;
 
@@ -17,11 +18,56 @@ namespace SimpleWebApi.Controllers
         }
 
         // GET: api/<AccountsController>
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> Get()
         {
             return Ok(await accountService.GetAllAsync());
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAccountsListAsync(
+            [FromQuery] UrlQueryParameters urlQueryParameters,
+            CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var accountListResponseViewModel = await accountService.GetAllByPageAsync(
+                                    urlQueryParameters.Limit,
+                                    urlQueryParameters.Page,
+                                    cancellationToken);
+
+            return Ok(GeneratePageLinks(urlQueryParameters, accountListResponseViewModel));
+        }
+
+        private AccountListResponseViewModel GeneratePageLinks(UrlQueryParameters
+                     queryParameters,
+                     AccountListResponseViewModel response)
+        {
+
+            if (response.CurrentPage > 1)
+            {
+                var prevRoute = Url.RouteUrl("/accounts", 
+                    new { limit = queryParameters.Limit, page = queryParameters.Page - 1 });
+
+                response.AddResourceLink(LinkedResourceType.Prev, prevRoute);
+
+            }
+
+            if (response.CurrentPage < response.TotalPages)
+            {
+                var nextRoute = Url.RouteUrl("api/Accounts", 
+                    new { limit = queryParameters.Limit, page = queryParameters.Page + 1 });
+
+                response.AddResourceLink(LinkedResourceType.Next, nextRoute);
+            }
+
+            return response;
+        }
+
+        public record UrlQueryParameters(int Limit = 50, int Page = 1);
 
         // GET api/<AccountsController>/5
         [HttpGet("{id}")]
